@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Pages ciblées, volontairement hors index
+Disallow: /kitchenette
+Disallow: /chut
+Disallow: /comptoir-du-son
+
+Sitemap: https://mixsound.fr/sitemap-index.xml
