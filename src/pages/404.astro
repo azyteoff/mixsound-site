@@ -1,0 +1,17 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page introuvable — Arthur Thomas" noindex={true}>
+  <div class="container not-found">
+    <p class="eyebrow">Erreur 404</p>
+    <h1 class="title-lg">Cette page n’existe pas.</h1>
+    <p class="lede" style="margin: 16px auto 0;">
+      Le lien est peut-être obsolète depuis la migration du site.
+    </p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href="/">Retour à l’accueil</a>
+      <a class="btn btn--ghost" href="/projets">Voir les projets</a>
+    </div>
+  </div>
+</BaseLayout>

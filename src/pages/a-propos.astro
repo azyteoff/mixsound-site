@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const skills = [
+  {
+    title: "Montage son & ambiances",
+    text: "Construction en couches, détails synchrones, perspectives, raccords et continuité sonore.",
+  },
+  {
+    title: "Sound design",
+    text: "Création de matières, mouvements, transitions et signatures sonores au service du récit.",
+  },
+  {
+    title: "Enregistrement & édition voix",
+    text: "Enregistrement, nettoyage, édition, raccords entre prises et travail d’intelligibilité.",
+  },
+  {
+    title: "Mixage & livrables",
+    text: "Adaptation aux versions image, équilibre voix-musique-effets, automation et exports.",
+  },
+];
+---
+
+<BaseLayout
+  title="À propos — Arthur Thomas, ingénieur son"
+  description="Diplômé d’un BTS Métiers de l’Audiovisuel option Son, deux ans en alternance chez Pure Sound Project : montage son, sound design, édition voix et mixage."
+>
+  <div class="container">
+    <p class="eyebrow">À propos</p>
+
+    <section class="about">
+      <div class="about__text">
+        <h1 class="title-lg">
+          Deux ans d'expérience en studio de post-production sonore.
+        </h1>
+        <p class="lede" style="margin-top: 24px;">
+          Diplômé d’un BTS Métiers de l’Audiovisuel, option Son, j’ai travaillé
+          deux ans en alternance chez Pure Sound Project sur des publicités,
+          courts-métrages et contenus de marque.
+        </p>
+        <p class="lede">
+          J’interviens en montage son, sound design, conformation, édition voix
+          et mixage, avec une attention particulière portée à la précision, à la
+          lisibilité et au rythme de l’image.
+        </p>
+      </div>
+
+      <figure class="about__portrait">
+        <img
+          src="/assets/images/about/portrait-arthur-thomas.png"
+          alt="Arthur Thomas en régie de post-production sonore, devant une console de mixage et deux écrans."
+          width="1086"
+          height="1448"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+    </section>
+
+    <section class="skills-grid" aria-label="Compétences">
+      {
+        skills.map((skill) => (
+          <article class="skill-card">
+            <h2>{skill.title}</h2>
+            <p>{skill.text}</p>
+          </article>
+        ))
+      }
+    </section>
+  </div>
+</BaseLayout>

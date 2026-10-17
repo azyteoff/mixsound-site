@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { getProjectsInOrder } from "../../lib/projects";
+
+const projects = await getProjectsInOrder();
+---
+
+<BaseLayout
+  title="Projets — Arthur Thomas, ingénieur son"
+  description="22 projets en post-production sonore : publicité, fiction et contenus de marque, avec le rôle précisé sur chaque projet."
+>
+  <div class="container">
+    <header class="page-head">
+      <p class="eyebrow">Projets</p>
+      <h1 class="title-lg">
+        Une sélection de projets en post-production sonore.
+      </h1>
+      <p class="lede">
+        Publicité, fiction et contenus de marque — mon rôle est précisé sur
+        chaque projet.
+      </p>
+    </header>
+
+    <div class="project-grid">
+      {
+        projects.map((project, index) => (
+          <ProjectCard project={project} eager={index < 2} />
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

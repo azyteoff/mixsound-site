@@ -1,0 +1,84 @@
+---
+import { getVideoEmbed } from "../lib/video";
+
+interface Props {
+  embedUrl: string;
+  isYouTube: boolean;
+  title: string;
+  /** Vignette locale servant d'affiche. Sans elle, l'iframe est chargée directement. */
+  poster?: string;
+  posterAlt?: string;
+  label?: string;
+}
+
+const { embedUrl, isYouTube, title, poster, posterAlt, label } = Astro.props;
+const video = getVideoEmbed(embedUrl, isYouTube);
+---
+
+{
+  video ? (
+    <div class="video">
+      {poster ? (
+        <button
+          type="button"
+          class="video__facade"
+          data-video-src={video.src}
+          data-video-title={title}
+          aria-label={`Lire la vidéo : ${title}`}
+        >
+          <img
+            src={poster}
+            alt={posterAlt ?? ""}
+            width="1280"
+            height="720"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="video__play" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5.5v13l11-6.5-11-6.5Z" />
+            </svg>
+          </span>
+          {label && <span class="video__label">{label}</span>}
+        </button>
+      ) : (
+        <iframe
+          src={video.src}
+          title={title}
+          loading="lazy"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allowfullscreen
+        />
+      )}
+    </div>
+  ) : (
+    <p class="lede">
+      Vidéo indisponible —{" "}
+      <a href={embedUrl} target="_blank" rel="noopener noreferrer">
+        ouvrir la source
+      </a>
+      .
+    </p>
+  )
+}
+
+<script>
+  // Façade cliquable : aucun script Vimeo/YouTube n'est chargé avant le clic.
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement | null;
+    const facade = target?.closest<HTMLButtonElement>(".video__facade");
+    if (!facade) return;
+
+    const src = facade.dataset.videoSrc;
+    if (!src) return;
+
+    const iframe = document.createElement("iframe");
+    const separator = src.includes("?") ? "&" : "?";
+    iframe.src = `${src}${separator}autoplay=1`;
+    iframe.title = facade.dataset.videoTitle ?? "Vidéo";
+    iframe.allow =
+      "autoplay; fullscreen; picture-in-picture; encrypted-media";
+    iframe.allowFullscreen = true;
+    facade.replaceWith(iframe);
+  });
+</script>

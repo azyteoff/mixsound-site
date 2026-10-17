@@ -1,0 +1,180 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { contact } from "../data/site";
+
+/**
+ * Le site Framer ne contenait aucun formulaire : uniquement quatre liens.
+ * Ceux-ci sont reproduits à l'identique ci-dessous.
+ *
+ * Le formulaire qui suit est un ajout, indépendant de l'hébergeur :
+ *   - renseignez PUBLIC_CONTACT_FORM_ENDPOINT (Formspree, Web3Forms, une
+ *     fonction Cloudflare…) dans un fichier .env pour un envoi HTTP classique ;
+ *   - sans endpoint, le formulaire bascule sur un envoi `mailto:` pré-rempli,
+ *     qui ne dépend d'aucun service tiers.
+ */
+const formEndpoint = import.meta.env.PUBLIC_CONTACT_FORM_ENDPOINT ?? "";
+---
+
+<BaseLayout
+  title="Contact — Arthur Thomas, ingénieur son"
+  description="Contacter Arthur Thomas : email, téléphone, CV PDF et LinkedIn. Disponible pour des projets de post-production sonore."
+>
+  <div class="container">
+    <p class="eyebrow">Contact</p>
+    <h1 class="title-lg">
+      Un projet sonore, une collaboration ou une opportunité en studio ?
+    </h1>
+
+    <div class="contact-grid" style="margin-top: 40px;">
+      <a class="contact-item" href={`mailto:${contact.email}`}>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2.5" y="5" width="19" height="14" rx="2"></rect>
+          <path d="m3 6.5 9 6 9-6"></path>
+        </svg>
+        {contact.email}
+      </a>
+
+      <a class="contact-item" href={contact.phoneHref}>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5L17 13l4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 3.5 5.2 2 2 0 0 1 5.5 3Z"
+          ></path>
+        </svg>
+        {contact.phoneDisplay}
+      </a>
+
+      <a
+        class="contact-item"
+        href={contact.cv}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"
+          ></path>
+          <path d="M14 3v5h5M12 11v5M9.5 14l2.5 2.5L14.5 14"></path>
+        </svg>
+        Télécharger le CV PDF
+      </a>
+
+      <a
+        class="contact-item"
+        href={contact.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4v11H3v-11Zm6.5 0h3.8v1.5h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.5 4.78 5.76v5.69h-4v-5.05c0-1.2-.02-2.75-1.7-2.75-1.7 0-1.96 1.31-1.96 2.66v5.14h-3.98v-11Z"
+          ></path>
+        </svg>
+        LinkedIn
+      </a>
+    </div>
+
+    <section class="contact-form">
+      <h2>Écrire directement</h2>
+      <p>
+        Formulaire indépendant de l’hébergeur. Sans endpoint configuré, il
+        ouvre simplement votre logiciel de messagerie avec le message
+        pré-rempli.
+      </p>
+
+      <form
+        id="contact-form"
+        method="post"
+        action={formEndpoint || undefined}
+        data-email={contact.email}
+        data-mode={formEndpoint ? "http" : "mailto"}
+      >
+        <div class="field">
+          <label for="name">Nom</label>
+          <input id="name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+
+        <!-- Anti-spam sans service tiers : champ masqué que seuls les robots remplissent. -->
+        <div class="visually-hidden" aria-hidden="true">
+          <label for="company">Ne pas remplir</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn--primary" type="submit">Envoyer</button>
+        </div>
+        <p class="form-note">
+          Vous pouvez aussi écrire directement à {contact.email}.
+        </p>
+      </form>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+
+  form?.addEventListener("submit", (event) => {
+    // Pot de miel : si le champ masqué est rempli, on abandonne silencieusement.
+    const honeypot = form.querySelector<HTMLInputElement>('input[name="company"]');
+    if (honeypot?.value) {
+      event.preventDefault();
+      return;
+    }
+
+    if (form.dataset.mode !== "mailto") return;
+
+    event.preventDefault();
+    const data = new FormData(form);
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const message = String(data.get("message") ?? "");
+    const subject = `Contact site — ${name}`;
+    const body = `${message}\n\n—\n${name}\n${email}`;
+    window.location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(body)}`;
+  });
+</script>

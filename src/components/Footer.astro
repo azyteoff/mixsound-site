@@ -1,0 +1,16 @@
+---
+import { site, contact } from "../data/site";
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="site-footer__tag">{site.footerTag}</p>
+    <nav class="site-footer__links" aria-label="Liens de contact">
+      <a href={`mailto:${contact.email}`}>Email</a>
+      <a href={contact.cv} target="_blank" rel="noopener noreferrer">CV PDF</a>
+      <a href={contact.linkedin} target="_blank" rel="noopener noreferrer"
+        >LinkedIn</a
+      >
+    </nav>
+  </div>
+</footer>

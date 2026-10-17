@@ -1,0 +1,140 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import VideoPlayer from "../../components/VideoPlayer.astro";
+import {
+  getProjectsInOrder,
+  getSiblings,
+  splitBody,
+  type Project,
+} from "../../lib/projects";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getProjectsInOrder();
+  // Le paramètre vient du champ `slug` du CMS, pas de l'identifiant de fichier :
+  // c'est ce qui préserve `/projets/l-oréal-professional` tel quel.
+  return projects.map((project) => ({
+    params: { slug: project.data.slug },
+    props: { project, projects },
+  }));
+};
+
+interface Props {
+  project: Project;
+  projects: Project[];
+}
+
+const { project, projects } = Astro.props;
+const {
+  title,
+  category,
+  summary,
+  role,
+  year,
+  skills,
+  thumbnail,
+  embedUrl,
+  isYouTube,
+} = project.data;
+
+const { studioContext, missions } = splitBody(project.body ?? "");
+const { previous, next } = getSiblings(projects, project.data.slug);
+---
+
+<BaseLayout
+  title={`${title} — Arthur Thomas, ingénieur son`}
+  description={summary}
+  ogImage={thumbnail.src}
+  ogType="article"
+>
+  <div class="container">
+    <a class="back-link" href="/projets">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M19 12H5M11 6l-6 6 6 6"></path>
+      </svg>
+      Tous les projets
+    </a>
+
+    <header class="project-head">
+      <p class="eyebrow">{category}</p>
+      <h1 class="display" style="font-size: clamp(2rem, 1.2rem + 3.6vw, 3.5rem);">
+        {title}
+      </h1>
+      <p class="lede">{summary}</p>
+    </header>
+
+    <VideoPlayer
+      embedUrl={embedUrl}
+      isYouTube={isYouTube}
+      title={`${title} — vidéo du projet`}
+      poster={thumbnail.src}
+      posterAlt={thumbnail.alt}
+    />
+
+    <dl class="project-meta">
+      <div class="meta-card">
+        <dt>Rôle</dt>
+        <dd>{role}</dd>
+      </div>
+      <div class="meta-card">
+        <dt>Année</dt>
+        <dd>{year}</dd>
+      </div>
+    </dl>
+
+    <ul class="project-tags">
+      {skills.map((skill) => <li class="tag">{skill}</li>)}
+    </ul>
+
+    {
+      studioContext.length > 0 && (
+        <section class="prose-block">
+          <h2>Studio / Contexte</h2>
+          {studioContext.map((line) => (
+            <p>{line}</p>
+          ))}
+        </section>
+      )
+    }
+
+    {
+      missions.length > 0 && (
+        <section class="prose-block">
+          <h2>Missions</h2>
+          {missions.map((line) => (
+            <p>{line}</p>
+          ))}
+        </section>
+      )
+    }
+
+    <nav class="project-nav" aria-label="Projet précédent et suivant">
+      {
+        previous ? (
+          <a href={`/projets/${previous.data.slug}`}>
+            ← {previous.data.title}
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next ? (
+          <a href={`/projets/${next.data.slug}`}>{next.data.title} →</a>
+        ) : (
+          <span />
+        )
+      }
+    </nav>
+  </div>
+</BaseLayout>

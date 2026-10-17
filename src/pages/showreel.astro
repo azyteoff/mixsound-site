@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import VideoPlayer from "../components/VideoPlayer.astro";
+import { showreel } from "../data/site";
+---
+
+<BaseLayout
+  title="Showreel — Arthur Thomas, ingénieur son"
+  description="Showreel 2026 : montage son, sound design et mixage sur des projets publicitaires, courts-métrages et contenus de marque."
+>
+  <div class="container">
+    <header class="page-head">
+      <p class="eyebrow">Showreel</p>
+      <h1 class="title-lg">
+        Une sélection de mon travail en montage son, sound design et mixage.
+      </h1>
+      <p class="lede">
+        Cette sélection rassemble plusieurs projets auxquels j’ai contribué chez
+        Pure Sound Project, en montage son, sound design, conformation, mixage
+        et post-production son.
+      </p>
+      <p class="lede" style="margin-top: 12px;">
+        Rôles variables selon les projets, mon rôle exact est précisé sur chaque
+        fiche projet.
+      </p>
+    </header>
+
+    <VideoPlayer
+      embedUrl={`https://vimeo.com/${showreel.vimeoId}`}
+      isYouTube={false}
+      title={showreel.title}
+      poster={showreel.poster}
+      posterAlt="Image d’ouverture du showreel 2026 d’Arthur Thomas"
+      label={showreel.label}
+    />
+
+    <div class="btn-row">
+      <a class="btn btn--primary" href="/projets">
+        Voir les projets
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14M13 6l6 6-6 6"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</BaseLayout>

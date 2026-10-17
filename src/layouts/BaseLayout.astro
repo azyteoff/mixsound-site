@@ -1,0 +1,94 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  /** Type Open Graph : `website` par défaut, `article` pour les fiches projet. */
+  ogType?: "website" | "article";
+  noindex?: boolean;
+}
+
+const {
+  title = site.defaultTitle,
+  description = site.defaultDescription,
+  ogImage = site.ogImage,
+  ogType = "website",
+  noindex = false,
+} = Astro.props;
+
+// Canoniques sans slash final, comme sur le site Framer — sauf la racine.
+const pathname = Astro.url.pathname;
+const canonical =
+  pathname === "/"
+    ? `${site.url}/`
+    : new URL(pathname.replace(/\/$/, ""), site.url).href;
+const ogImageUrl = new URL(ogImage, site.url).href;
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+      )
+    }
+    <meta name="theme-color" content="#0b0d10" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/images/social/default-og.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!--
+      General Sans, servie par Fontshare — le service officiel d'Indian Type
+      Foundry, éditeur de la police. C'est la voie prévue par la licence ITF FFL
+      pour un usage web : gratuite, sans autorisation préalable, et sans aucun
+      lien avec Framer.
+      Graisses utilisées par le site : 400 (texte), 500 (navigation, intertitres),
+      600 (titres, boutons).
+      Pour supprimer cette dépendance externe, voir docs/FONT-LICENSE.md.
+    -->
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://api.fontshare.com/v2/css?f%5B%5D=general-sans@400,500,600&display=swap"
+    />
+
+    <link rel="preconnect" href="https://player.vimeo.com" crossorigin />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <Header path={Astro.url.pathname} />
+    <main id="main" class="page">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

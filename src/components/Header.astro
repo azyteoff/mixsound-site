@@ -1,0 +1,40 @@
+---
+import { nav, contact } from "../data/site";
+
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+const normalize = (value: string) =>
+  value.length > 1 ? value.replace(/\/$/, "") : value;
+const current = normalize(path);
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a
+      class="site-header__logo"
+      href="/"
+      aria-current={current === "/" ? "page" : undefined}>Arthur Thomas</a
+    >
+    <nav class="site-nav" aria-label="Navigation principale">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={current.startsWith(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        class="is-cv"
+        href={contact.cv}
+        target="_blank"
+        rel="noopener noreferrer">CV</a
+      >
+    </nav>
+  </div>
+</header>

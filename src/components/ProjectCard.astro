@@ -1,0 +1,33 @@
+---
+import type { Project } from "../lib/projects";
+
+interface Props {
+  project: Project;
+  /** `true` pour les deux premières cartes : chargement immédiat de la vignette. */
+  eager?: boolean;
+}
+
+const { project, eager = false } = Astro.props;
+const { slug, title, summary, role, skills, thumbnail } = project.data;
+---
+
+<a class="project-card" href={`/projets/${slug}`}>
+  <div class="project-card__media">
+    <img
+      src={thumbnail.src}
+      alt={thumbnail.alt}
+      width="800"
+      height="450"
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+    />
+  </div>
+  <div class="project-card__body">
+    <!-- Le site Framer n'affichait que Skill 1 et Skill 2 sur les cartes ;
+         Skill 3 n'apparaît que sur la fiche projet. -->
+    <p class="project-card__skills">{skills.slice(0, 2).join(" · ")}</p>
+    <h2 class="project-card__title">{title}</h2>
+    <p class="project-card__summary">{summary}</p>
+    <p class="project-card__role">Rôle — {role}</p>
+  </div>
+</a>

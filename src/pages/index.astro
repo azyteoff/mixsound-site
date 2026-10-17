@@ -1,0 +1,127 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import VideoPlayer from "../components/VideoPlayer.astro";
+import { contact, showreel } from "../data/site";
+
+/**
+ * Les quatre blocs ci-dessous reprennent mot pour mot la variante téléphone du
+ * site Framer : c'est la seule des trois mises en page où les descriptions ne
+ * sont pas tronquées par « … ». Aucun texte n'a été inventé.
+ */
+const pillars = [
+  {
+    title: "Publicités",
+    text: "Dialogues, ambiances, bruitages, raccords, versions et reconformations image.",
+  },
+  {
+    title: "Sound design",
+    text: "Textures, impacts, mouvements, transitions et création de signatures sonores.",
+  },
+  {
+    title: "Rec & édition voix",
+    text: "Prise de voix off, sélection des prises, nettoyage, édition et synchronisation.",
+  },
+  {
+    title: "Mixage",
+    text: "Équilibre voix, musique et effets, niveaux, versions et préparation des exports.",
+  },
+];
+---
+
+<BaseLayout>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Portfolio post-production sonore</p>
+        <h1 class="display">Arthur Thomas</h1>
+        <p class="hero__subtitle">
+          Assistant post-production son /<br />Sound designer junior
+        </p>
+        <p class="lede hero__text">
+          Deux ans d’expérience en studio de post-production sonore, entre
+          montage son, mixage, sound design et conformation pour publicités,
+          courts-métrages, et audiovisuel.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/projets">
+            Voir les projets
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6"></path>
+            </svg>
+          </a>
+          <a class="btn btn--ghost" href="/showreel">
+            Voir le showreel
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M8 5.5v13l11-6.5-11-6.5Z"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <VideoPlayer
+          embedUrl={`https://vimeo.com/${showreel.vimeoId}`}
+          isYouTube={false}
+          title={showreel.title}
+          poster={showreel.poster}
+          posterAlt="Image d’ouverture du showreel 2026 d’Arthur Thomas"
+        />
+        <div class="hero__media-caption">
+          <strong>{showreel.caption}</strong>
+          <span class="eyebrow eyebrow--muted">{showreel.label}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="pillars" aria-label="Domaines d’intervention">
+      {
+        pillars.map((pillar) => (
+          <article class="pillar">
+            <h2>{pillar.title}</h2>
+            <p>{pillar.text}</p>
+          </article>
+        ))
+      }
+    </section>
+
+    <div class="home-cta">
+      <a
+        class="btn btn--outline-accent"
+        href={contact.cv}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Télécharger le CV PDF
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 4v12M7 11l5 5 5-5M5 20h14"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</BaseLayout>
